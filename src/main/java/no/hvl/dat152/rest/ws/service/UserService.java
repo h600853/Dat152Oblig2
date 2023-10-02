@@ -31,16 +31,22 @@ public class UserService {
 	}
 	
 	public void deleteUser(Long id) throws UserNotFoundException {
-		
-		// TODO
+		try {
+		userRepository.deleteById(id);
+		}
+		catch (Exception e) {
+			throw new UserNotFoundException("User with id: "+id+" not found");
+		}
 	}
 	
 	public User updateUser(User user, Long id) throws UserNotFoundException {
-		
-		// TODO
-		
-		return null;
-		
+		try  {
+		user.setUserid(id);
+		return saveUser(user);
+		} catch (Exception e) {
+			throw new UserNotFoundException("User with id: "+id+" not found");
+		}
+
 	}
 	
 	public List<User> findAllUsers(){
@@ -67,8 +73,15 @@ public class UserService {
 	
 	public User createOrdersForUser(Long id, Order order) throws UserNotFoundException{
 		
-		// TODO
-		
-		return null;
+
+		try {
+		User user = findUser(id);
+		user.getOrders().add(order);
+		return user;
+
+		} catch (Exception e) {
+			throw new UserNotFoundException("User with id: "+id+" not found");
+		}
+
 	}
 }

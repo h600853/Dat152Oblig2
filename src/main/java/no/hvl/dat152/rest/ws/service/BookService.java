@@ -36,9 +36,12 @@ public class BookService {
 	public Book updateBook(Book book, String isbn) 
 			throws BookNotFoundException, UpdateBookFailedException {
 		
-		// TODO
-		
-		return null;
+		try {
+			book.setIsbn(isbn);
+			return saveBook(book);
+		} catch (Exception e) {
+			throw new UpdateBookFailedException("Update book with isbn: "+isbn+" failed!");
+		}
 	}
 	
 	public List<Book> findAll(){
@@ -70,16 +73,24 @@ public class BookService {
 	}
 	
 	public Set<Author> findAuthorsByBookISBN(String isbn) throws BookNotFoundException{
-		
-		// TODO
-		
-		return null;
+
+		try {
+		Book bookByISBN = bookRepository.findBookByISBN(isbn);
+		return bookByISBN.getAuthors();
+		} catch (Exception e) {
+			throw new BookNotFoundException("Book with isbn: "+isbn+" not found");
+		}
+
 		
 	}
 	
 	public void deleteByISBN(String isbn) throws BookNotFoundException {
 		
-		// TODO
+		try {
+		bookRepository.deleteById(Long.valueOf(isbn));
+		} catch (Exception e) {
+			throw new BookNotFoundException("Book with isbn: "+isbn+" not found");
+		}
 
 	}
 	

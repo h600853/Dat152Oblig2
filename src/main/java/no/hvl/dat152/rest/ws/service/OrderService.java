@@ -32,8 +32,11 @@ public class OrderService {
 	}
 	
 	public void deleteOrder(Long id) throws OrderNotFoundException {
-
-		// TODO
+ 		try {
+		orderRepository.deleteById(id);
+		} catch (Exception e) {
+			throw new OrderNotFoundException("Order with id: "+id+" not found");
+		}
 	}
 	
 	public List<Order> findAllOrders(){
@@ -46,9 +49,9 @@ public class OrderService {
 	
 	public List<Order> findByExpiryDate(LocalDate expiry, Pageable page){
 		
-		// TODO
-		
-		return null;
+		Page<Order> orders = orderRepository.findByExpiryBefore(expiry, page);
+		return orders.getContent();
+
 	}
 	
 	public Order findOrder(Long id) throws OrderNotFoundException {
@@ -61,8 +64,11 @@ public class OrderService {
 	
 	public Order updateOrder(Order order, Long id) throws OrderNotFoundException {
 		
-		// TODO
-		
-		return null;			
+		try {
+			order.setId(id);
+			return saveOrder(order);
+		} catch (Exception e) {
+			throw new OrderNotFoundException("Order with id: "+id+" not found");
+		}
 	}
 }

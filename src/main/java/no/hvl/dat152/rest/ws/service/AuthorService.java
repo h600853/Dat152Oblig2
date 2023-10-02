@@ -4,6 +4,7 @@
 package no.hvl.dat152.rest.ws.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +27,8 @@ public class AuthorService {
 	
 	public Author saveAuthor(Author author) {
 		
-		// TODO
-		return null;
+		return authorRepository.save(author);
+
 	}
 	
 	public Author findById(long id) throws AuthorNotFoundException {
@@ -35,6 +36,20 @@ public class AuthorService {
 		Author author = authorRepository.findById(id)
 				.orElseThrow(()-> new AuthorNotFoundException("Author with the id: "+id+ "not found!"));
 		
+		return author;
+	}
+	public List<Author> findAll() {
+
+		return (List<Author>) authorRepository.findAll();
+	}
+	public Author findByAuthorId(long id) throws NoSuchElementException {
+		Author author = null;
+		try {
+			author = authorRepository.findById(id).get();
+		}catch(Exception e) {
+			throw new NoSuchElementException("Author with id = "+id+" not found!");
+
+		}
 		return author;
 	}
 

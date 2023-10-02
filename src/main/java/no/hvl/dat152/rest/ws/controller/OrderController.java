@@ -47,10 +47,12 @@ public class OrderController {
 			@RequestParam(required = false) LocalDate expiry, 
 			@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "3") int size){
-		
-		// TODO
-		
-		return null;
+
+		List<Order> byExpiryDate = orderService.findByExpiryDate(expiry, PageRequest.of(page, size));
+		if (byExpiryDate.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<>(byExpiryDate, HttpStatus.OK);
 	}
 	
 	@GetMapping("/orders/{id}")
@@ -80,9 +82,14 @@ public class OrderController {
 	
 	@DeleteMapping("/orders/{id}")
 	public ResponseEntity<Object> returnBookOrder(@PathVariable("id") Long id) throws OrderNotFoundException{
-		
-		// TODO
-		
+
+		try {
+		orderService.deleteOrder(id);
+
+		} catch (OrderNotFoundException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+		}
+
 		return new ResponseEntity<>("Order with id: '"+id+"' deleted!", HttpStatus.OK);
 	}
 	
