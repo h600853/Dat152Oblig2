@@ -13,6 +13,7 @@ import no.hvl.dat152.rest.ws.exceptions.UserNotFoundException;
 import no.hvl.dat152.rest.ws.model.Order;
 import no.hvl.dat152.rest.ws.model.User;
 import no.hvl.dat152.rest.ws.repository.UserRepository;
+import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * @author tdoy
@@ -76,7 +77,7 @@ public class UserService {
 
 		try {
 		User user = findUser(id);
-		user.getOrders().add(order);
+		user.addOrder(order);
 		return user;
 
 		} catch (Exception e) {

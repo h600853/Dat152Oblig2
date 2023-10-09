@@ -99,18 +99,18 @@ public class UserController {
 	}
 	
 	@PostMapping("/users/{id}/orders")
-	public ResponseEntity<Object> createUserOrders(@PathVariable("id") Long id, @RequestBody Order order) 
-			throws UserNotFoundException{
-		
-			try {
-		User user = userService.createOrdersForUser(id, order);
+	public ResponseEntity<Object> createUserOrders(@PathVariable("id") Long id, @RequestBody Order order)
+			throws UserNotFoundException, OrderNotFoundException {
+
+		try {
+			User user = userService.createOrdersForUser(id, order);
+			addLinks(user.getOrders());
 			return new ResponseEntity<>(user, HttpStatus.CREATED);
 
-			} catch (UserNotFoundException e) {
-				return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+		} catch (UserNotFoundException | OrderNotFoundException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
 
-			}
-
+		}
 	}
 	
 	private void addLinks(Set<Order> orders) throws OrderNotFoundException {
